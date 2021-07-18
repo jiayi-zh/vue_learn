@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 基础语法</title>
+</head>
+
+<!--Jquery 赋值方式-->
+<div id="native"></div>
+<!--VUE 声明式赋值方式-->
+<div id="app">
+    {}赋值: {{ message }}
+    <br/>
+    解释Html: <span v-html="rawHtml"></span>
+</div>
+<hr/>
+
+<!--指令v-bind绑定title和message-->
+<div id="app-2">
+    <span v-bind:title="message">
+        鼠标悬停几秒钟查看此处动态绑定的提示信息
+    </span>
+</div>
+<hr/>
+
+<!--指令v-if判断绑定值是否为true-->
+<div id="app-3">
+    <p v-if="seen">现在你看到我了</p>
+</div>
+<hr/>
+
+<!--指令v-for迭代展示列表-->
+<div id="app-4">
+    <ol>
+        <li v-for="todo in todos">
+            {{ todo.text }}
+        </li>
+    </ol>
+</div>
+
+<!--指令v-on添加事件监听器-->
+<div id="app-5">
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMsg">反转</button>
+</div>
+<div id="app-6">
+    <p>{{ message}}</p>
+    <label>
+        <input v-model="message">
+    </label>
+</div>
+
+<body>
+<script src="../js/jquery-3.6.0.js"></script>
+<script src="../js/vue.js"></script>
+<script type="application/javascript">
+    // 命令式编程
+    $(function () {
+        $('#native').text('Hello Jquery!')
+    })
+</script>
+<script>
+    // 声明式编程
+    // let(定义变量)、const(定义常量)
+    const app = new Vue({
+        el: '#app', // 挂载要管理的元素
+        data: { // 定义数据
+            message: 'Hello Vue!',
+            rawHtml: '<span style="color: red">Hello Vue!</span>'
+        }
+    })
+    const app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString()
+        }
+    })
+    const app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    })
+    const app4 = new Vue({
+        el: '#app-4',
+        data: {
+            todos: [
+                {text: "1"},
+                {text: "2"},
+                {text: "3"},
+            ]
+        }
+    })
+    const app5 = new Vue({
+        el: '#app-5',
+        data: {
+            message: 'Vue'
+        },
+        methods: {
+            reverseMsg: function () {
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    })
+    const app6 = new Vue({
+        el: '#app-6',
+        data: {
+            message: '填充默认用户输入数据'
+        }
+    })
+</script>
+</body>
+</html>
