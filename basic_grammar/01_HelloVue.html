@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Vue 基础语法</title>
+
+    <style type="text/css">
+        .static {
+            color: green;
+        }
+
+        .active {
+            font-size: 25px;
+        }
+    </style>
 </head>
 
 <!--Jquery 赋值方式-->
@@ -20,35 +30,87 @@
     <span v-bind:title="message">
         鼠标悬停几秒钟查看此处动态绑定的提示信息
     </span>
+    <br/>
+    <span :title="message">
+        鼠标悬停几秒钟查看此处动态绑定的提示信息
+    </span>
 </div>
 <hr/>
 
 <!--指令v-if判断绑定值是否为true-->
 <div id="app-3">
     <p v-if="seen">现在你看到我了</p>
+    <p v-else>你看不到我</p>
+
+    <template v-if="loginTypeFlag">
+        <label>Username</label>
+        <input placeholder="Enter your username">
+    </template>
+    <template v-else>
+        <label>Email</label>
+        <input placeholder="Enter your email address">
+    </template>
+    <br/>
+    <button @click="changeLoginType">切换登录方式</button>
 </div>
 <hr/>
 
 <!--指令v-for迭代展示列表-->
 <div id="app-4">
-    <ol>
-        <li v-for="todo in todos">
-            {{ todo.text }}
+    <!--无下标-->
+    <br/>
+    <ul id="example-1">
+        <li v-for="item in items" :key="item.message">
+            {{ item.message }}
         </li>
-    </ol>
+    </ul>
+    <!--带下标-->
+    <ul id="example-2">
+        <li v-for="(item, index) in items">
+            {{ index }}-{{ item.message }}
+        </li>
+    </ul>
+    <!--遍历对象-->
+    <ul id="v-for-object">
+        <li v-for="value in object">
+            {{ value }}
+        </li>
+    </ul>
+    <ul>
+        <li v-for="(value, name) in object" v-bind:key="name">
+            {{ name }}: {{ value }}
+        </li>
+    </ul>
+    <ul>
+        <li v-for="(value, name, index) in object">
+            {{ index }} - {{ name }}: {{ value }}
+        </li>
+    </ul>
 </div>
+<hr/>
 
 <!--指令v-on添加事件监听器-->
 <div id="app-5">
     <p>{{ message }}</p>
-    <button v-on:click="reverseMsg">反转</button>
+    <!--v-on:click -> @click-->
+    <button @click="reverseMsg">反转</button>
 </div>
+<hr/>
+
 <div id="app-6">
     <p>{{ message}}</p>
     <label>
         <input v-model="message">
     </label>
 </div>
+<hr/>
+
+<!--计算属性-->
+<div id="app-7">{{ fullName }}</div>
+<hr/>
+
+<!--绑定Html class-->
+<div id="app-8" class="static" v-bind:class="{ active: isActive}">绑定Html class</div>
 
 <body>
 <script src="../js/jquery-3.6.0.js"></script>
@@ -78,17 +140,28 @@
     const app3 = new Vue({
         el: '#app-3',
         data: {
-            seen: true
+            seen: true,
+            loginTypeFlag: true
+        },
+        methods: {
+            changeLoginType: function () {
+                console.log(!this.loginTypeFlag)
+                this.loginTypeFlag = !this.loginTypeFlag
+            }
         }
     })
     const app4 = new Vue({
         el: '#app-4',
         data: {
-            todos: [
-                {text: "1"},
-                {text: "2"},
-                {text: "3"},
-            ]
+            items: [
+                {message: 'Foo'},
+                {message: 'Bar'}
+            ],
+            object: {
+                title: 'How to do lists in Vue',
+                author: 'Jane Doe',
+                publishedAt: '2016-04-10'
+            }
         }
     })
     const app5 = new Vue({
@@ -106,6 +179,31 @@
         el: '#app-6',
         data: {
             message: '填充默认用户输入数据'
+        }
+    })
+    const app7 = new Vue({
+        el: '#app-7',
+        data: {
+            firstName: 'Foo',
+            lastName: 'Bar'
+        },
+        computed: {
+            fullName: {
+                get: function () {
+                    return "姓: " + this.firstName + ", " + "名: " + this.lastName
+                },
+                set: function (newName) {
+                    let names = newName.split(' ')
+                    this.firstName = names[0]
+                    this.lastName = names[names.length - 1]
+                }
+            }
+        }
+    })
+    const app8 = new Vue({
+        el: '#app-8',
+        data: {
+            isActive: false
         }
     })
 </script>
